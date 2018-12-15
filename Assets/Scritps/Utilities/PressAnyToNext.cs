@@ -22,7 +22,12 @@ public class PressAnyToNext : MonoBehaviour
         timerUntilLoad -= Time.deltaTime;
         if (timerUntilLoad <= 0 && Input.anyKeyDown)
         {
-            SceneManager.LoadScene(sceneName);
+            PressAnyToNext.LoadLevel(sceneName);
         }
+    }
+
+    public static void LoadLevel(string levelName)
+    {
+        SceneManager.LoadScene(levelName);
     }
 }

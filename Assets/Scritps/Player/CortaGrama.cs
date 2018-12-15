@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 [RequireComponent(typeof(Collider2D))]
 public class CortaGrama : MonoBehaviour
 {
-    public int counter = 1440;
+    public int counter = 1397;
     /// <summary>
     /// Sent when another object enters a trigger collider attached to this
     /// object (2D physics only).

@@ -5,7 +5,18 @@ using UnityEngine;
 public class PlayerMoveTopMouse : MonoBehaviour
 {
 
+    /// <summary>
+    /// What animator we need to use
+    /// </summary>
     Animator animator;
+
+    public enum LOOKINGFOR
+    {
+        DOWN,
+        UP,
+        LEFT,
+        RIGHT,
+    }
 
     /// <summary>
     /// The speed of the Player
@@ -19,8 +30,9 @@ public class PlayerMoveTopMouse : MonoBehaviour
     /// <summary>
     /// That position relative to the players current position (what direction and how far did you click?)
     /// </summary>
-    Vector2 relativePosition = Vector2.zero;
+    // Vector2 relativePosition = Vector2.zero;
 
+    public LOOKINGFOR side;
     /// <summary>
     /// My rigidbody
     /// </summary>
@@ -39,7 +51,7 @@ public class PlayerMoveTopMouse : MonoBehaviour
     void Awake()
     {
         this.rb2d = GetComponent<Rigidbody2D>();
-        this.initialScale = this.transform.localScale;
+        // this.initialScale = this.transform.localScale;
     }
 
     void Setup(GameObject goWithAnimator)
@@ -69,8 +81,8 @@ public class PlayerMoveTopMouse : MonoBehaviour
         if (diff.magnitude < .1f) return;
         this.rb2d.MovePosition(this.rb2d.position + diff * this.speed * Time.fixedDeltaTime);
 
-        // diff.x += Random.Range(-zuera.x, zuera.x);
-        // diff.y += Random.Range(-zuera.y, zuera.y);
+        diff.x += Random.Range(-zuera.x, zuera.x);
+        diff.y += Random.Range(-zuera.y, zuera.y);
 
         // diff.Normalize();
 
@@ -91,16 +103,19 @@ public class PlayerMoveTopMouse : MonoBehaviour
 
         if (y > x)
         {
-            if (diff.y > Mathf.Epsilon) animator.SetTrigger("up");
-            else if (diff.y < Mathf.Epsilon) animator.SetTrigger("down");
+            if (diff.y > Mathf.Epsilon) { animator.SetTrigger("up"); side = LOOKINGFOR.UP; }
+            else if (diff.y < Mathf.Epsilon) { animator.SetTrigger("down"); side = LOOKINGFOR.DOWN; }
         }
         else
         {
-            if (diff.x > Mathf.Epsilon) animator.SetTrigger("right");
-            else if (diff.x < Mathf.Epsilon) animator.SetTrigger("left");
+            if (diff.x > Mathf.Epsilon) { animator.SetTrigger("right"); side = LOOKINGFOR.RIGHT; }
+            else if (diff.x < Mathf.Epsilon) { animator.SetTrigger("left"); side = LOOKINGFOR.LEFT; }
         }
+    }
 
-
+    public void IncrementZuera()
+    {
+        zuera += Vector2.one;
     }
 
 }

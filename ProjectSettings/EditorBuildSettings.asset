@@ -14,4 +14,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameCutscene.unity
     guid: ddbf6385c2d3dba488a86382bb2dda4e
+  - enabled: 1
+    path: Assets/Scenes/MiniGames/MiniGame1.unity
+    guid: c2ef978ed47f7ce458b306f7bba9d57b
+  - enabled: 1
+    path: Assets/Scenes/MiniGames/MiniGame2.unity
+    guid: 1e62e2b79e278d648aa9a408da223424
+  - enabled: 1
+    path: Assets/Scenes/MiniGames/MiniGame3.unity
+    guid: a6519670e50167b4d92b4aeec11bfe08
   m_configObjects: {}
