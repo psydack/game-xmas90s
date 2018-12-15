@@ -11,13 +11,16 @@ public class PressAnyToNext : MonoBehaviour
     /// </summary>
     public string sceneName;
 
+    public float timerUntilLoad = 2f;
+
     // Update is called once per frame
     /// <summary>
 	/// Update is called every frame, if the MonoBehaviour is enabled.
 	/// </summary>
 	void Update()
     {
-        if (Input.anyKeyDown)
+        timerUntilLoad -= Time.deltaTime;
+        if (timerUntilLoad <= 0 && Input.anyKeyDown)
         {
             SceneManager.LoadScene(sceneName);
         }
