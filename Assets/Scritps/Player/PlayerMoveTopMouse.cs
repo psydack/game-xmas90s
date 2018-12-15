@@ -3,17 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMoveTopMouse : MonoBehaviour
-{	
+{
 
+    Animator animator;
 
     /// <summary>
     /// The speed of the Player
     /// </summary>
     [SerializeField] Vector2 speed = new Vector2(5f, 2f);
 
-    // The position you clicked
+    /// <summary>
+    ///  The position you clicked
+    /// </summary>
     Vector2 targetPosition = Vector2.zero;
-    // That position relative to the players current position (what direction and how far did you click?)
+    /// <summary>
+    /// That position relative to the players current position (what direction and how far did you click?)
+    /// </summary>
     Vector2 relativePosition = Vector2.zero;
 
     /// <summary>
@@ -21,8 +26,12 @@ public class PlayerMoveTopMouse : MonoBehaviour
     /// </summary>
     Rigidbody2D rb2d;
 
+    /// <summary>
+    /// Make some noise
+    /// </summary>
     [SerializeField] Vector2 zuera;
 
+    Vector3 initialScale;
 
     /// <summary>
     /// Awake is called when the script instance is being loaded.
@@ -30,6 +39,12 @@ public class PlayerMoveTopMouse : MonoBehaviour
     void Awake()
     {
         this.rb2d = GetComponent<Rigidbody2D>();
+        this.initialScale = this.transform.localScale;
+    }
+
+    void Setup(GameObject goWithAnimator)
+    {
+        animator = goWithAnimator.GetComponent<Animator>();
     }
 
     void Update()
@@ -39,12 +54,6 @@ public class PlayerMoveTopMouse : MonoBehaviour
         {
             this.targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
-
-        // Find the relative poistion of the target based upon the current position
-        // Update each frame to account for any movement
-        this.relativePosition = new Vector2(
-            this.targetPosition.x - this.transform.position.x,
-            this.targetPosition.y - this.transform.position.y);
     }
 
     /// <summary>
@@ -55,18 +64,42 @@ public class PlayerMoveTopMouse : MonoBehaviour
         if (this.targetPosition == Vector2.zero) return;
 
         // LOOK
-        Vector3 diff = this.targetPosition - (Vector2)this.transform.position;
+        Vector2 diff = this.targetPosition - (Vector2)this.transform.position;
 
-        if (diff.magnitude < 1f) return;
+        if (diff.magnitude < .1f) return;
+        this.rb2d.MovePosition(this.rb2d.position + diff * this.speed * Time.fixedDeltaTime);
 
-        this.rb2d.MovePosition(this.rb2d.position + ((Vector2)transform.up) * this.speed * Time.fixedDeltaTime);
+        // diff.x += Random.Range(-zuera.x, zuera.x);
+        // diff.y += Random.Range(-zuera.y, zuera.y);
 
-        diff.x += Random.Range(-zuera.x, zuera.x);
-        diff.y += Random.Range(-zuera.y, zuera.y);
+        // diff.Normalize();
 
-        diff.Normalize();
-        float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+        // float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+        // transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+
+        Animation(diff);
+
+    }
+
+    /// <summary>
+    /// Make Animation
+    /// </summary>
+    void Animation(Vector2 diff)
+    {
+        float x = diff.x > 0 ? diff.x : diff.x * -1;
+        float y = diff.y > 0 ? diff.y : diff.y * -1;
+
+        if (y > x)
+        {
+            if (diff.y > Mathf.Epsilon) animator.SetTrigger("up");
+            else if (diff.y < Mathf.Epsilon) animator.SetTrigger("down");
+        }
+        else
+        {
+            if (diff.x > Mathf.Epsilon) animator.SetTrigger("right");
+            else if (diff.x < Mathf.Epsilon) animator.SetTrigger("left");
+        }
+
 
     }
 
